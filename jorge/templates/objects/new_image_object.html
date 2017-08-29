@@ -1,0 +1,58 @@
+{% extends 'base/base.html' %}
+
+
+{%  block content %}
+    <div class="container">
+        <h2>Ingrese foto para el objeto</h2><br>
+        <form   method="post" name="form" enctype="multipart/form-data">
+            {% csrf_token %}
+            <div class="form-group">
+                <label for="{{ form.autor.id_for_label }}">Autor:{{ form.autor.errors }}</label>
+                {{ form.autor }}
+            </div>
+            <div class="form-group">
+                <label for="{{ form.descripcion.id_for_label }}">Descripción:{{ form.descripcion.errors }}</label>
+                {{ form.descripcion }}
+            </div>
+            <div class="form-group">
+                <label for="{{ form.archivo.id_for_label }}">Su archivo imagen:{{ form.archivo.errors }}</label>
+                {{ form.archivo }}
+            </div>
+            <div class="form-group">
+                <br>
+                <button value="terminar" name="action" class="btn btn-success">Guardar y listar objetos</button>
+                <button value="continuar" name="action" class="btn btn-warning">Guardar y añadir otra foto</button>
+            </div>
+        </form>
+    </div>
+
+    <div class="container">
+        <div class="row" style="padding-left: 1.2%"><h3>Fotos Cargadas</h3></div>
+        <div style="margin-bottom: 20px ">
+        {% for foto in fotos %}
+            <!--divisbleby:# determina el numero de columna-->
+            {% if forloop.counter0|divisibleby:3 %}
+            <div class="row">
+            {% endif %}
+                <div class="col-md-4" align="center">
+                    <div class="container_imagen">
+                        <!--FALTA CAMBIAR FOTO A THUMBNAIL-->
+                        <img class="galleryImage" src="{{ foto.archivo.url }}" height="150" width="200">
+                        <p class="title">{{ foto.autor }} </p>
+                        <div class="overlay"></div>
+                        <div class="buttonImage"><a href="{% url 'jorge:delete_photo_object' foto.pk %}">Borrar</a> </div>
+                    </div>
+                </div>
+            {% if forloop.last %}
+            </div>
+            {% endif %}
+            <!-- Ambos divisibleby deben coincidir-->
+            {% if forloop.counter|divisibleby:3 %}
+            </div>
+            {% endif %}
+        {% endfor %}
+        </div>
+    </div>
+
+{% endblock %}
+

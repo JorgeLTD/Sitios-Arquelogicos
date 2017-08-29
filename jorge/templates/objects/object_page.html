@@ -1,0 +1,76 @@
+{% extends 'base/base.html' %}
+
+{% block content %}
+
+{% load thumbnail %}
+
+<div class="container">
+    <br>
+    <div class="row">
+        <div class="container">
+            <h2>&nbsp;&nbsp;{{ obj.nombre }}</h2>
+        </div>
+    </div>
+    <br>
+    <div class="row">
+        <div class="col-lg-7">
+            <div class="container">
+                <h4>Galería Fotos</h4>
+            </div>
+            <!-- CONTENIDO GALERIA-->
+            <div class="container" id="contenido">
+            {% for img in obj.getimages %}
+                {% if forloop.counter0|divisibleby:3 %}
+                <div class="row">
+                {% endif %}
+                    <div class="col-md-4">
+                        <div class="container_imagen">
+                        {% thumbnail img.archivo "200x150" crop="center" as thumb %}
+                            <img class="galleryImage" src="{{ thumb.url }}">
+                        {% endthumbnail %}
+                            <div class="overlay"></div>
+                            <div class="buttonImage"><a href="#">Información</a> </div>
+                        </div>
+                    </div>
+                {% if forloop.counter|divisibleby:3 or forloop.last  %}
+                </div>
+                {% endif %}
+            {% endfor %}
+            </div>
+        </div>
+        <div class="col-lg-5">
+            <div class="container">
+                <h4>Información</h4>
+            </div>
+            <div class="container">
+                <table class="table table-striped">
+                    <tbody>
+                        <tr>
+                            <td style="width: 35%"><strong>Nombre:</strong></td>
+                            <td style="text-align: center">{{ obj.nombre }}</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Sitio Origen:</strong></td>
+                            <td style="text-align: center;">{{ obj.sitio.name }}</td>
+
+                        </tr>
+                        <tr>
+                            <td><strong>Tipo:</strong></td>
+                            <td style="text-align: center">{{ obj.subtipo.tipo.nombre }}</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Subtipo:</strong></td>
+                            <td style="text-align: center">{{ obj.subtipo.nombre }}</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Descripción:</strong></td>
+                            <td style="text-align: center">{{ obj.descripcion }}</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% endblock %}

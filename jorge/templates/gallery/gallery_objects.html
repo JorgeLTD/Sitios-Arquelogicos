@@ -1,0 +1,129 @@
+{% extends 'base/base.html' %}
+
+{% block content %}
+{% load thumbnail %}
+
+<div class="margin10">
+    <div class="container">
+        <br><h2>Objetos registrados</h2><br>
+        {% for obj in objs %}
+            <!--|divisibleby:# determina numero de columnas-->
+            {% if forloop.counter0|divisibleby:3 %}
+            <div class="row">
+            {% endif %}
+                <!-- al modificar el divisible , se debe cambiar la clase columna o css-->
+                <div class="col-md-4" align="center">
+                    <!--Imagen-->
+                    <div class="container_imagen">
+                        <!--crear thumbnail-->
+                        {% thumbnail obj.getimage.archivo "200x150" crop="center" as im %}
+                            <img class="galleryImage" src="{{ im.url }}">
+                        {% empty %}
+                            <!--Usar imagen perdida si no existe archivo asociado-->
+                            <img class="galleryImage" src="/media/default_images/missing.png">
+                        {% endthumbnail %}
+                        <p class="title">{{ obj.nombre }} </p>
+                        <div class="overlay"></div>
+                        <!--id modal definido por valor del ciclo for-->
+                        <div class="buttonImage"><a data-toggle="modal" href="#myModal-{{ forloop.counter }}">Información</a> </div>
+
+                        <!--
+                        <div class="buttonImage"><button type="button" class="btn btn-primary outline nofocus" data-toggle="modal" data-target="#myModal"> Información</button>  </div>
+                        -->
+                    </div>
+                    <!-- Modal -->
+                    <div class="modal fade" id="myModal-{{ forloop.counter }}" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                        <div class="modal-dialog modal-lg" role="document">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <h4 class="modal-title" id="exampleModalLabel" style="color: midnightblue;">
+                                        <i>&nbsp;{{ obj.nombre }}</i>
+                                    </h4>
+                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                        <span aria-hidden="true">&times;</span>
+                                    </button>
+                                </div>
+                                <div class="modal-body">
+                                    <table class="table table-striped">
+                                        <tbody>
+                                            <tr>
+                                                <td><strong>Foto:</strong></td>
+                                                <!--Insercion imagen-->
+                                                <td style="text-align: center">
+                                                    {% with imgs=obj.getimages %}
+                                                        {% if imgs.count == 1 %}
+                                                            <!--width 100% ajusta la imagen al ancho del modal si sobrepasa 628-->
+                                                            <img src="{{ imgs.0.archivo.url }}"
+                                                                {% if obj.getimage.archivo.width > 628 %}
+                                                                    width="100%"
+                                                                {% endif %}
+                                                            alt="{{ obj.nombre }}">
+                                                        {% elif imgs.count == 0 %}
+                                                            <!--Sin Imgen-->
+                                                            <img src="/media/default_images/missing.png" width="70%">
+                                                        {% else %}
+                                                            <!--Slideshow-->
+                                                            <div id="Slide-{{ forloop.counter }}" class="carousel slide container-fluid" data-ride="carousel">
+                                                                <div class="carousel-inner" role="listbox">
+                                                                    {% for img in imgs %}
+                                                                        <div class="carousel-item {% if forloop.counter == 1 %} active {% endif %}">
+                                                                            <img class="d-block img-fluid" src="{{ img.archivo.url }}" {% if img.archivo.width > 628 %} width="100%" {% endif %} alt="{{ obj.nombre }}{{ forloop.counter }}">
+                                                                        </div>
+                                                                    {% endfor %}
+                                                                </div>
+                                                                <a class="carousel-control-prev" href="#Slide-{{ forloop.counter }}" role="button" data-slide="prev">
+                                                                    <span class="carousel-control-prev-icon" style="background-color: black"></span>
+                                                                    <span class="sr-only">Anterior</span>
+                                                                </a>
+                                                                <a class="carousel-control-next" href="#Slide-{{ forloop.counter }}" role="button" data-slide="next">
+                                                                    <span class="carousel-control-next-icon" style="background-color: black"></span>
+                                                                    <span class="sr-only">Siguiente</span>
+                                                                </a>
+                                                            </div>
+                                                        {% endif %}
+                                                    {% endwith %}
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <td><strong>Tipo:</strong></td>
+                                                <td style="text-align: center">{{ obj.subtipo.tipo.nombre }}</td>
+                                            </tr>
+                                            <tr>
+                                                <td><strong>Subtipo:</strong></td>
+                                                <td style="text-align: center">{{ obj.subtipo.nombre }}</td>
+                                            </tr>
+                                            <tr>
+                                                <td><strong>Descripción</strong></td>
+                                                <td style="text-align: center">{{ obj.descripcion }}</td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+                                <div class="modal-footer">
+
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            <!--|divisibleby:# debe coincidir en el anterior-->
+            {% if forloop.counter|divisibleby:3 or forloop.last%}
+            </div>
+            {% endif %}
+        {% endfor %}
+    </div>
+</div>
+
+
+{% endblock %}
+
+{% block scripts %}
+
+<script type="text/javascript">
+    $('.carousel').carousel({
+        interval: 0
+    })
+
+</script>
+
+{% endblock %}

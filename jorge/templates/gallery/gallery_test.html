@@ -1,0 +1,37 @@
+{% extends 'base/base.html' %}
+
+{% block content %}
+{% load thumbnail %}
+<!-- GALERIA OBSOLETA POR CAMBIO MODELO-->
+<!-- EL CICLO GENERADOR ES REUTILIZABLE-->
+<div class="margin10">
+    <div class="container">
+        <br><h2>Galeria fotos en desarrollo</h2><br>
+
+        {% for imagen in imagenes %}
+            {% if forloop.counter0|divisibleby:3 %}
+            <div class="row">
+            {% endif %}
+                <div class="col-md-4" align="center">
+                    <div class="container_imagen">
+                        {% thumbnail imagen.archivo "235x180" crop="center" as im %}
+                        <img src="{{ im.url }}">
+                        {% endthumbnail %}
+                        <p class="title">{{ imagen.autor }} </p>
+                        <div class="overlay"></div>
+                        <div class="button"><a href="{{ imagen.archivo.url }}">Link</a> </div>
+                    </div>
+                </div>
+            {% if forloop.last %}
+            </div>
+            {% endif %}
+            {% if forloop.counter|divisibleby:3 %}
+            </div>
+            {% endif %}
+        {% endfor %}
+
+    </div>
+</div>
+
+
+{% endblock %}

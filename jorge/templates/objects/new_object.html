@@ -1,0 +1,72 @@
+{% extends 'base/base.html' %}
+
+{% block content %}
+    <div class="container margin10">
+        <br>
+        <div class="container"> <h2>Formulario nuevo objeto</h2> </div>
+        <form   class="form" method="post">
+            {% csrf_token %}
+            <!--CONTAINER VARIOS INPUTS DE VARIOS OBJETOS-->
+            <div    class="container" id="objectlist">
+                <!--CONTAINER PARA INPUT OBJETO INDIVIDUAL QUE SE CLONA-->
+                <div style="border-bottom: 1px solid black" id="input_obj">
+                    <div class="row">
+                        <div class="col-md-8">
+                            <div class="form-group">
+                                <label for="nombre">Nombre objeto</label>
+                                <input name="nombre" required class="form-control">
+                            </div>
+                        </div>
+
+                        <div class="col-md-4">
+                            <div class="form-group">
+                            <label for=subtipo>Tipo de objeto</label>
+                            <select name="subtipo"  class="form-control" required>
+                                {% for t in tipos %}
+                                    <optgroup label="{{ t.nombre }}">
+                                    {% for s in subtipos %}
+                                        {% if s.tipo == t %}
+                                            <option value="{{ s.pk }}">{{ s.nombre }}</option>
+                                        {% endif %}
+                                    {% endfor %}
+                                    </optgroup>
+                                {% endfor %}
+                            </select>
+                        </div>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="descripcion">Descripción del objeto</label>
+                        <input name="descripcion" class="form-control">
+                    </div>
+                </div>
+            </div>
+            <!--BOTONES-->
+            <div class="container margin10">
+                <div class="form-group margin10">
+                    <div class="row">
+                        <div class="col-md-4">
+                            <span class="fa fa-plus fa-2x" id="add_object"></span> Añadir Objeto
+                        </div>
+                        <div class="col-md-8">
+                            <button value="submit" class="btn btn-success" style="float: right"> Registrar objeto </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </form>
+    </div>
+
+{% endblock %}
+
+
+{%  block scripts %}
+    <script type="text/javascript">
+        $(function(){
+           $('#add_object').click(function () {
+               var $newobj = $('#input_obj').clone()
+               $('#objectlist').append($($newobj))
+               });
+        });
+    </script>
+{% endblock %}
