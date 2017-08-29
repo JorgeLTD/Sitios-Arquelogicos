@@ -1,0 +1,11 @@
+-Python 3.4 o superior
+
+-Pillow
+pip install pillow
+
+-Sorl-thumbnailsl
+pip install git+https://github.com/jazzband/sorl-thumbnail.git
+
+-memcahed
+sudo apt-get install memcached
+pip install -e git+https://github.com/jpmcpe/python3-memcached.git#egg=python3_memcached
